@@ -1,4 +1,4 @@
-# [ZenSpotify](https://www.zenspotify.com)
+# ZenSpotify
 
 ## About
 This is a simple app to demonstrate the use of the Spotify Web API.
