@@ -1,0 +1,133 @@
+body {
+  background: #fff;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+a {
+  color: #4183c4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.explicit {
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-family: "Bitstream Vera Sans Mono", Consolas, Courier, monospace;
+  font-size: 12px;
+  margin: 0 2px;
+  padding: 0 5px;
+}
+
+h1, h2, h3, h4 {
+  font-weight: bold;
+  margin: 0 0 15px;
+  padding: 0;
+}
+
+h1 {
+  border-bottom: 1px solid #ddd;
+  font-size: 2.5em;
+  font-weight: bold;
+  margin: 0 0 15px;
+  padding: 0;
+}
+
+h2 {
+  border-bottom: 1px solid #eee;
+  font-size: 2em;
+}
+
+h3 {
+  font-size: 1.5em;
+}
+
+h4 {
+  font-size: 1.2em;
+}
+
+p, ul {
+  margin: 15px 0;
+}
+
+ul {
+  padding-left: 30px;
+}
+
+.thumbnail {
+  display: inline-block !important;
+  width: 200px;
+  margin-right:10px;
+}
+
+.thumbnail-caption {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.audio-playing {
+  color: green;
+}
+
+.navbar-brand {
+  padding: 0 !important;
+}
+
+.application-body {
+  padding: 0 30px;
+}
+
+.track-listing-modal-body{
+  overflow-y: scroll;
+  height: 500px;
+}
+
+.select-artist-button {
+  width: 100%;
+}
+
+.album-thumbnail-overlay {
+  position:absolute;
+  top:0;
+  cursor: pointer;
+  background:rgba(0,0,0,.75);
+  text-align:left;
+  height:200px;
+  width:200px;
+  padding:10px;
+  opacity:0;
+  -webkit-transition: opacity .25s ease;
+  -moz-transition: opacity .25s ease;}
+
+
+.album-thumbnail {
+  position: relative;
+  display: inline-block;
+  margin:10px;
+  border: 1px solid rgba(0,0,0,.75);
+}
+
+.album-thumbnail:hover .album-thumbnail-overlay {
+  opacity:1;
+}
+
+.found-artist {
+  max-width: 900px;
+  max-height: 300px;
+  overflow-y: scroll;
+  display: inline-block;
+}
+
+.album-thumbnail-overlay-text {
+  font-family:Helvetica;
+  font-weight:900;
+  color:rgba(255,255,255,.85);
+  font-size:24px;
+}

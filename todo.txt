@@ -1,0 +1,36 @@
+TODO:
+- Create basic page with React and Boostrap
+- Create "How it works" with code snippets
+- Modify readme.md
+imports:
+npm install --save-dev reactify classnames react-bootstrap babel-cli babel-preset-es2015 babel-loader babel-preset-react babel-core  --save
+npm install --save-dev react-hot-loader
+
+sudo npm install --save-dev webpack webpack-dev-server
+sudo npm install --save-dev jsx-loader
+npm install react-hot --save-dev
+
+Directions:
+Go into config section and run webpack to compile javascript assets
+
+ TODO:
+ - Add about modal
+ - Wikipedia artist information
+ https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=Adele
+
+     $.ajax({
+       url: link,
+       success: function(response) {console.log(response)}
+     });
+ - Hover over affect on artist and album
+ - "Play on spotify"
+ - Maybe actually deploy on AWS or Heroku
+
+Helpful articles and tools:
+
+https://webpack.github.io/docs/library-and-externals.html
+https://webpack.github.io/
+https://react-bootstrap.github.io/getting-started.html
+https://robots.thoughtbot.com/setting-up-webpack-for-react-and-hot-module-replacement
+https://devcenter.heroku.com/articles/rack
+https://developer.spotify.com/web-api/console/
