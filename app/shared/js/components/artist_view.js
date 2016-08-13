@@ -11,6 +11,7 @@ export default class ArtistView extends React.Component {
     // with the associated wikipedia article on the right
     if(selectedArtist) {
       resultsPage = <SelectedArtist artistWikipediaEntry={artistWikipediaEntry} artistInfo={selectedArtist}/>;
+    // Otherwise, show the album results from the selected artist
     } else if(artistSearchResults) {
       resultsPage = (<div>
         {artistSearchResults.map(function(artist) {
@@ -45,7 +46,6 @@ class SelectedArtist extends React.Component {
     </div>);
 
     return resultsPage
-
   }
 
 }

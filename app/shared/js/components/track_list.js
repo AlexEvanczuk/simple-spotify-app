@@ -2,14 +2,14 @@ import { Button, Modal, Tooltip, OverlayTrigger, Glyphicon} from 'react-bootstra
 
 export default class TrackList extends React.Component {
   constructor() {
-    super()
+    super();
     this.state = { showModal: true,
                     trackList: null,
                     currentlyPlayingTrack: null};
   }
 
   close(onStopAudio, onCloseTrackList) {
-    this.setState({ currentlyPlayingTrack: null, showModal: true });
+    this.setState({ currentlyPlayingTrack: null, showModal: false });
     onStopAudio();
     onCloseTrackList();
   }
@@ -46,22 +46,25 @@ export default class TrackList extends React.Component {
 
   toggleAudio(onPlayAudio, onStopAudio, track) {
     // Stop any existing music
-    onStopAudio()
-    this.setState({currentlyPlayingTrack: null})
+    onStopAudio();
+    this.setState({currentlyPlayingTrack: null});
     let currentlyPlayingTrack = this.state.currentlyPlayingTrack;
     // Start new music or switch from existing music
     if(!currentlyPlayingTrack || currentlyPlayingTrack.id != track.id) {
-      this.setState({currentlyPlayingTrack: track})
-      onPlayAudio(track.preview_url)
+      this.setState({currentlyPlayingTrack: track});
+      onPlayAudio(track['preview_url'])
     }
   }
 
+  // Since this sets state in an AJAX call, we need to make sure the component
+  // is still mounted to the DOM when we try to set state.
   saveTrackListResults(results) {
-    this.setState({trackList: results.items})
+    if(!this.isUnmounted) {
+      this.setState({trackList: results.items})
+    }
   }
 
   getAlbumTracks(albumInfo, saveTrackListResults) {
-    // Pull artist id
    $.ajax({
       url: 'https://api.spotify.com/v1/albums/' + albumInfo.id + "/tracks",
         data: {limit: 50},
@@ -70,7 +73,7 @@ export default class TrackList extends React.Component {
   }
 
   renderTrackRows(albumInfo, currentlyPlayingTrack, toggleAudio) {
-    this.getAlbumTracks(albumInfo, this.saveTrackListResults.bind(this))
+    this.getAlbumTracks(albumInfo, this.saveTrackListResults.bind(this));
     if(this.state.trackList) {
       return (<tbody>
         {this.state.trackList.map(function(trackInfo) {
@@ -82,24 +85,28 @@ export default class TrackList extends React.Component {
     }
 
   }
+
+  componentWillUnmount() {
+    this.isUnmounted = true;
+  }
 }
 
 class Track extends React.Component { 
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {playing: false}
   }
 
   render() {
     let { trackInfo, toggleAudio, currentlyPlayingTrack } = this.props;
     let explicitTag = null;
-    if(trackInfo.explicit) {
+    if(trackInfo['explicit']) {
       explicitTag = <span className="explicit">EXPLICIT</span>;
     }
     return (<tr> 
-              <th scope="row">{trackInfo.track_number}</th>
+              <th scope="row">{trackInfo['track_number']}</th>
               <td>{trackInfo.name}{explicitTag}</td>
-              <td>{this.convertMilliSeconds(trackInfo.duration_ms)}</td>
+              <td>{this.convertMilliSeconds(trackInfo['duration_ms'])}</td>
               <td>{this.renderPlayGif(toggleAudio, trackInfo, currentlyPlayingTrack)}</td>
             </tr>);
   }

@@ -64,7 +64,11 @@
 
 	var _album_view2 = _interopRequireDefault(_album_view);
 
-	var _navigation_bar = __webpack_require__(261);
+	var _about_modal = __webpack_require__(261);
+
+	var _about_modal2 = _interopRequireDefault(_about_modal);
+
+	var _navigation_bar = __webpack_require__(262);
 
 	var _navigation_bar2 = _interopRequireDefault(_navigation_bar);
 
@@ -84,12 +88,11 @@
 
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Application).call(this));
 
-	    _this.state = { searchQuery: null,
-	      artistSearchResults: null,
+	    _this.state = { artistSearchResults: null,
 	      selectedArtist: null,
 	      artistWikipediaEntry: null,
-	      albums: null,
-	      showTrackList: false,
+	      albumSearchResults: null,
+	      showAboutModal: null,
 	      currentAudio: null };
 	    return _this;
 	  }
@@ -98,13 +101,15 @@
 	    key: 'render',
 	    value: function render() {
 	      var selectedArtist = this.state.selectedArtist,
-	          searchContainer = _react2.default.createElement(_search_container2.default, { onSearchArtist: this.onSearchArtist.bind(this) }),
-	          searchQuery = this.state.searchQuery,
 	          artistWikipediaEntry = this.state.artistWikipediaEntry,
 	          artistSearchResults = this.state.artistSearchResults,
-	          albums = this.state.albums;
+	          albumSearchResults = this.state.albums,
+	          aboutModal = null;
 
-	      var navBar = _react2.default.createElement(_navigation_bar2.default, null);
+	      var navBar = _react2.default.createElement(_navigation_bar2.default, { onClickAbout: this.onClickAbout.bind(this) });
+
+	      var searchContainer = _react2.default.createElement(_search_container2.default, { onSearchArtist: this.onSearchArtist.bind(this) });
+
 	      var artistView = _react2.default.createElement(_artist_view2.default, { onSelectArtist: this.onSelectArtist.bind(this),
 	        artistSearchResults: artistSearchResults,
 	        selectedArtist: selectedArtist,
@@ -112,13 +117,17 @@
 
 	      var albumView = _react2.default.createElement(_album_view2.default, { onPlayAudio: this.onPlayAudio.bind(this),
 	        onStopAudio: this.onStopAudio.bind(this),
-	        artistName: searchQuery,
-	        onShowTrackList: this.onShowTrackList.bind(this),
-	        albums: albums });
+	        albums: albumSearchResults });
 
+	      if (this.state.showAboutModal) {
+	        aboutModal = _react2.default.createElement(_about_modal2.default, null);
+	      }
+
+	      // Main application top level view
 	      return _react2.default.createElement(
 	        'div',
 	        null,
+	        aboutModal,
 	        _react2.default.createElement(
 	          'div',
 	          null,
@@ -140,40 +149,46 @@
 	    key: 'onSearchArtist',
 	    value: function onSearchArtist(text) {
 	      this.searchArtists(text, this.saveArtistResults.bind(this));
-	      this.setState({ searchQuery: text, albums: null, artistSearchResults: null, selectedArtist: null });
+	      this.setState({ albums: null, artistSearchResults: null, selectedArtist: null });
 	    }
+
+	    // When the user selects an artist, asynchronously load the artist information, their albums, and
+	    // save the selected artist
+
 	  }, {
 	    key: 'onSelectArtist',
 	    value: function onSelectArtist(selectedArtist, e) {
+	      e.preventDefault();
 	      this.getArtistInfo(selectedArtist.name, this.saveArtistInfo.bind(this));
 	      this.searchAlbums(selectedArtist, this.saveAlbumResults.bind(this));
 	      this.setState({ selectedArtist: selectedArtist });
 	    }
 
-	    // Pull tracks and populate into modal
+	    // Store saved search results
 
-	  }, {
-	    key: 'onShowTrackList',
-	    value: function onShowTrackList(albumInfo, e) {
-	      this.setState({ showTrackList: true });
-	    }
 	  }, {
 	    key: 'saveAlbumResults',
 	    value: function saveAlbumResults(results) {
 	      this.setState({ albums: results.items });
 	    }
+
+	    // Store saved search results
+
 	  }, {
 	    key: 'saveArtistResults',
 	    value: function saveArtistResults(results) {
-	      this.setState({ artistSearchResults: results.artists.items });
+	      this.setState({ artistSearchResults: results['artists']['items'] });
 	    }
+
+	    // Store saved search results
+
 	  }, {
 	    key: 'saveArtistInfo',
 	    value: function saveArtistInfo(results) {
 	      this.setState({ artistWikipediaEntry: results });
 	    }
 
-	    // Have audio controller at top level so only one audio plays at a time
+	    // Start a new audio stream
 
 	  }, {
 	    key: 'onPlayAudio',
@@ -182,6 +197,9 @@
 	      audioPreview.play();
 	      this.setState({ currentAudio: audioPreview });
 	    }
+
+	    // Stop playing any audio
+
 	  }, {
 	    key: 'onStopAudio',
 	    value: function onStopAudio() {
@@ -205,6 +223,9 @@
 	        success: saveArtistResults
 	      });
 	    }
+
+	    // Pulls HTML from Wikipedia Article with a given title
+
 	  }, {
 	    key: 'getArtistInfo',
 	    value: function getArtistInfo(artistName, saveArtistInfo) {
@@ -237,6 +258,14 @@
 	        url: 'https://api.spotify.com/v1/artists/' + artist.id + "/albums",
 	        success: saveAlbumResults
 	      });
+	    }
+
+	    // Open the about modal
+
+	  }, {
+	    key: 'onClickAbout',
+	    value: function onClickAbout() {
+	      this.setState({ showAboutModal: true });
 	    }
 	  }]);
 
@@ -308,14 +337,12 @@
 	        )
 	      );
 
-	      var element = React.createElement(
+	      return React.createElement(
 	        "span",
 	        null,
 	        searchHeader,
 	        searchBar
 	      );
-
-	      return element;
 	    }
 	  }, {
 	    key: "handleChange",
@@ -19351,6 +19378,7 @@
 	      // with the associated wikipedia article on the right
 	      if (selectedArtist) {
 	        resultsPage = React.createElement(SelectedArtist, { artistWikipediaEntry: artistWikipediaEntry, artistInfo: selectedArtist });
+	        // Otherwise, show the album results from the selected artist
 	      } else if (artistSearchResults) {
 	        resultsPage = React.createElement(
 	          "div",
@@ -19516,9 +19544,7 @@
 	    key: "render",
 	    value: function render() {
 	      var _props = this.props;
-	      var artist = _props.artist;
 	      var albums = _props.albums;
-	      var onShowTrackList = _props.onShowTrackList;
 	      var onPlayAudio = _props.onPlayAudio;
 	      var onStopAudio = _props.onStopAudio;
 
@@ -19535,7 +19561,7 @@
 	          "span",
 	          null,
 	          albums.map(function (album) {
-	            return React.createElement(Album, { onPlayAudio: onPlayAudio, onStopAudio: onStopAudio, onShowTrackList: onShowTrackList, albumInfo: album, key: album.id });
+	            return React.createElement(Album, { onPlayAudio: onPlayAudio, onStopAudio: onStopAudio, albumInfo: album, key: album.id });
 	          })
 	        );
 	      } else {
@@ -19545,13 +19571,12 @@
 	          "Select an artist"
 	        );
 	      }
-	      var element = React.createElement(
+	      return React.createElement(
 	        "span",
 	        null,
 	        resultsHeader,
 	        resultsPage
 	      );
-	      return element;
 	    }
 	  }]);
 
@@ -19578,7 +19603,6 @@
 	    value: function render() {
 	      var _props2 = this.props;
 	      var albumInfo = _props2.albumInfo;
-	      var onShowTrackList = _props2.onShowTrackList;
 	      var onPlayAudio = _props2.onPlayAudio;
 	      var onStopAudio = _props2.onStopAudio;
 
@@ -19656,7 +19680,7 @@
 	  _createClass(TrackList, [{
 	    key: "close",
 	    value: function close(onStopAudio, onCloseTrackList) {
-	      this.setState({ currentlyPlayingTrack: null, showModal: true });
+	      this.setState({ currentlyPlayingTrack: null, showModal: false });
 	      onStopAudio();
 	      onCloseTrackList();
 	    }
@@ -19733,18 +19757,23 @@
 	      // Start new music or switch from existing music
 	      if (!currentlyPlayingTrack || currentlyPlayingTrack.id != track.id) {
 	        this.setState({ currentlyPlayingTrack: track });
-	        onPlayAudio(track.preview_url);
+	        onPlayAudio(track['preview_url']);
 	      }
 	    }
+
+	    // Since this sets state in an AJAX call, we need to make sure the component
+	    // is still mounted to the DOM when we try to set state.
+
 	  }, {
 	    key: "saveTrackListResults",
 	    value: function saveTrackListResults(results) {
-	      this.setState({ trackList: results.items });
+	      if (!this.isUnmounted) {
+	        this.setState({ trackList: results.items });
+	      }
 	    }
 	  }, {
 	    key: "getAlbumTracks",
 	    value: function getAlbumTracks(albumInfo, saveTrackListResults) {
-	      // Pull artist id
 	      $.ajax({
 	        url: 'https://api.spotify.com/v1/albums/' + albumInfo.id + "/tracks",
 	        data: { limit: 50 },
@@ -19770,6 +19799,11 @@
 	          "Getting tracks..."
 	        );
 	      }
+	    }
+	  }, {
+	    key: "componentWillUnmount",
+	    value: function componentWillUnmount() {
+	      this.isUnmounted = true;
 	    }
 	  }]);
 
@@ -19799,7 +19833,7 @@
 	      var currentlyPlayingTrack = _props2.currentlyPlayingTrack;
 
 	      var explicitTag = null;
-	      if (trackInfo.explicit) {
+	      if (trackInfo['explicit']) {
 	        explicitTag = React.createElement(
 	          "span",
 	          { className: "explicit" },
@@ -19812,7 +19846,7 @@
 	        React.createElement(
 	          "th",
 	          { scope: "row" },
-	          trackInfo.track_number
+	          trackInfo['track_number']
 	        ),
 	        React.createElement(
 	          "td",
@@ -19823,7 +19857,7 @@
 	        React.createElement(
 	          "td",
 	          null,
-	          this.convertMilliSeconds(trackInfo.duration_ms)
+	          this.convertMilliSeconds(trackInfo['duration_ms'])
 	        ),
 	        React.createElement(
 	          "td",
@@ -19889,6 +19923,166 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var AboutModal = function (_React$Component) {
+	  _inherits(AboutModal, _React$Component);
+
+	  function AboutModal() {
+	    _classCallCheck(this, AboutModal);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AboutModal).call(this));
+
+	    _this.state = { showModal: true };
+	    return _this;
+	  }
+
+	  _createClass(AboutModal, [{
+	    key: "close",
+	    value: function close() {
+	      this.setState({ showModal: false });
+	    }
+	  }, {
+	    key: "open",
+	    value: function open() {
+	      this.setState({ showModal: true });
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+
+	      return React.createElement(
+	        _lib.Modal,
+	        { show: this.state.showModal, onHide: this.close.bind(this) },
+	        React.createElement(
+	          _lib.Modal.Header,
+	          { closeButton: true },
+	          React.createElement(
+	            _lib.Modal.Title,
+	            null,
+	            "Zen Spotify"
+	          )
+	        ),
+	        React.createElement(
+	          _lib.Modal.Body,
+	          { className: "track-listing-modal-body" },
+	          React.createElement(
+	            "div",
+	            null,
+	            React.createElement(
+	              "h2",
+	              null,
+	              "About"
+	            ),
+	            "This is a simple app to demonstrate the use of the Spotify Web API.",
+	            React.createElement("br", null),
+	            "Created by Alex Evanczuk.",
+	            React.createElement(
+	              "h2",
+	              null,
+	              "Features"
+	            ),
+	            React.createElement(
+	              "ul",
+	              null,
+	              React.createElement(
+	                "li",
+	                null,
+	                "Artist Search: Begin typing into the search bar to find matching artists"
+	              ),
+	              React.createElement(
+	                "li",
+	                null,
+	                "Album Search: Select an artist to see their albums."
+	              ),
+	              React.createElement(
+	                "li",
+	                null,
+	                "Track Preview: Select an album to get its track listings and he ability to preview tracks."
+	              )
+	            ),
+	            React.createElement(
+	              "h2",
+	              null,
+	              "Technology/Frameworks Used"
+	            ),
+	            React.createElement(
+	              "ul",
+	              null,
+	              React.createElement(
+	                "li",
+	                null,
+	                "React.js: For the main application architecture"
+	              ),
+	              React.createElement(
+	                "li",
+	                null,
+	                "React-Bootstrap: For components and UI design"
+	              ),
+	              React.createElement(
+	                "li",
+	                null,
+	                "Webpack: For bundling necessary JS"
+	              ),
+	              React.createElement(
+	                "li",
+	                null,
+	                "Wikipedia API: For getting artist biographical information"
+	              ),
+	              React.createElement(
+	                "li",
+	                null,
+	                "Spotify API: For getting artist musical information"
+	              )
+	            ),
+	            React.createElement(
+	              "h2",
+	              null,
+	              "Future Developments"
+	            ),
+	            React.createElement(
+	              "ul",
+	              null,
+	              React.createElement(
+	                "li",
+	                null,
+	                "Host on AWS or Heroku, allow logging in to show playlists and play full tracks"
+	              ),
+	              React.createElement(
+	                "li",
+	                null,
+	                "Clean up CSS"
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return AboutModal;
+	}(React.Component);
+
+	exports.default = AboutModal;
+
+/***/ },
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _lib = __webpack_require__(3);
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 	var NavigationBar = function (_React$Component) {
 	  _inherits(NavigationBar, _React$Component);
 
@@ -19901,6 +20095,9 @@
 	  _createClass(NavigationBar, [{
 	    key: "render",
 	    value: function render() {
+	      var onClickAbout = this.props.onClickAbout;
+
+
 	      return React.createElement(
 	        _lib.Navbar,
 	        { staticTop: true },
@@ -19918,7 +20115,7 @@
 	          null,
 	          React.createElement(
 	            _lib.NavItem,
-	            { eventKey: 1, href: "#" },
+	            { onClick: onClickAbout, eventKey: 1, href: "#" },
 	            "About"
 	          )
 	        )

@@ -13,17 +13,10 @@ Created by Alex Evanczuk.
 * **React.js**: For the main application architecture
 * **React-Bootstrap**: For components and UI design
 * **Webpack**: For bundling necessary JS
-```
-test
-```
+* **Wikipedia API**: For getting artist biographical information
+* **Spotify API**: For getting artist musical information
 
-```sh
-bower install --save react
-```
 
-And it's just as easy with [npm](http://npmjs.com):
-
-```sh
-npm i --save react
-```
-
+## Future Developments
+* Host on AWS or Heroku, allow logging in to show playlists and play full tracks
+* Clean up CSS

@@ -3,7 +3,7 @@ import TrackList from './track_list';
 export default class AlbumView extends React.Component {
 
 	render() {
-    let { artist, albums, onShowTrackList, onPlayAudio, onStopAudio } = this.props;
+    let { albums, onPlayAudio, onStopAudio } = this.props;
     let resultsHeader = (<h2>Albums</h2>);
 
     let resultsPage = null;
@@ -11,14 +11,13 @@ export default class AlbumView extends React.Component {
     if(albums) {
       resultsPage = (<span>
         {albums.map(function(album) {
-          return <Album onPlayAudio={onPlayAudio} onStopAudio={onStopAudio} onShowTrackList={onShowTrackList} albumInfo={album} key={album.id} />;
+          return <Album onPlayAudio={onPlayAudio} onStopAudio={onStopAudio} albumInfo={album} key={album.id} />;
         })}
       </span>);
     } else {
       resultsPage = <div>Select an artist</div>
     }
-    let element = (<span>{resultsHeader}{resultsPage}</span>);
-    return element
+    return (<span>{resultsHeader}{resultsPage}</span>);
 	}
 
 };
@@ -31,7 +30,7 @@ class Album extends React.Component {
   }
 
   render () {
-    let { albumInfo, onShowTrackList, onPlayAudio, onStopAudio } = this.props;
+    let { albumInfo, onPlayAudio, onStopAudio } = this.props;
     let albumCover = albumInfo.images[1].url;
     let albumName = albumInfo.name;
     let trackList = null;

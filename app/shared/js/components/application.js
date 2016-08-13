@@ -2,29 +2,31 @@ import React from 'react'
 import SearchContainer from './search_container';
 import ArtistView from './artist_view';
 import AlbumView from './album_view';
+import AboutModal from './about_modal';
 import NavigationBar from './navigation_bar';
 
 class Application extends React.Component {
   constructor() {
-    super()
-    this.state = {searchQuery: null,
-                  artistSearchResults: null,
+    super();
+    this.state = {artistSearchResults: null,
                   selectedArtist: null,
                   artistWikipediaEntry: null,
-                  albums: null,
-                  showTrackList: false,
+                  albumSearchResults: null,
+                  showAboutModal: null,
                   currentAudio: null};
   }
 
   render() {
     let selectedArtist = this.state.selectedArtist,
-        searchContainer = <SearchContainer onSearchArtist={this.onSearchArtist.bind(this)}/>,
-        searchQuery = this.state.searchQuery,
         artistWikipediaEntry = this.state.artistWikipediaEntry,
         artistSearchResults = this.state.artistSearchResults,
-        albums = this.state.albums;
+        albumSearchResults = this.state.albums,
+        aboutModal = null;
 
-    let navBar = <NavigationBar />;
+    let navBar = <NavigationBar onClickAbout={this.onClickAbout.bind(this)}/>;
+
+    let searchContainer = <SearchContainer onSearchArtist={this.onSearchArtist.bind(this)}/>;
+
     let artistView = (<ArtistView onSelectArtist={this.onSelectArtist.bind(this)}
                                  artistSearchResults={artistSearchResults}
                                  selectedArtist={selectedArtist}
@@ -32,11 +34,15 @@ class Application extends React.Component {
 
     let albumView = (<AlbumView onPlayAudio={this.onPlayAudio.bind(this)}
                               onStopAudio={this.onStopAudio.bind(this)}
-                              artistName={searchQuery}
-                              onShowTrackList={this.onShowTrackList.bind(this)}
-                              albums={albums}/>);
+                              albums={albumSearchResults}/>);
 
+    if(this.state.showAboutModal) {
+      aboutModal = <AboutModal/>
+    }
+
+    // Main application top level view
     return (<div>
+              {aboutModal}
               <div>{navBar}</div>
               <div className='application-body'>
                 {searchContainer}
@@ -49,42 +55,44 @@ class Application extends React.Component {
   // Store search results and clear out any existing artist info
   onSearchArtist(text) {
     this.searchArtists(text, this.saveArtistResults.bind(this));
-    this.setState({searchQuery: text, albums: null, artistSearchResults: null, selectedArtist: null})
+    this.setState({albums: null, artistSearchResults: null, selectedArtist: null})
   }
 
+  // When the user selects an artist, asynchronously load the artist information, their albums, and
+  // save the selected artist
   onSelectArtist(selectedArtist, e) {
+    e.preventDefault();
     this.getArtistInfo(selectedArtist.name, this.saveArtistInfo.bind(this));
     this.searchAlbums(selectedArtist, this.saveAlbumResults.bind(this));
     this.setState({selectedArtist: selectedArtist})
   }
 
-  // Pull tracks and populate into modal
-  onShowTrackList(albumInfo, e) {
-    this.setState({showTrackList: true});
-  }
-
+  // Store saved search results
   saveAlbumResults(results) {
     this.setState({albums: results.items});
   }
 
+  // Store saved search results
   saveArtistResults(results) {
-    this.setState({artistSearchResults: results.artists.items})
+    this.setState({artistSearchResults: results['artists']['items']})
   }
 
+  // Store saved search results
   saveArtistInfo(results) {
     this.setState({artistWikipediaEntry: results})
   }
 
-  // Have audio controller at top level so only one audio plays at a time
+  // Start a new audio stream
   onPlayAudio(audioUrl) {
     let audioPreview = new Audio(audioUrl);
-    audioPreview.play()
+    audioPreview.play();
     this.setState({currentAudio: audioPreview})
   }
 
+  // Stop playing any audio
   onStopAudio() {
     if(this.state.currentAudio) {
-      this.state.currentAudio.pause()
+      this.state.currentAudio.pause();
       this.setState({currentAudio: null})
     }
   }
@@ -101,6 +109,7 @@ class Application extends React.Component {
       });
   }
 
+  // Pulls HTML from Wikipedia Article with a given title
   getArtistInfo(artistName, saveArtistInfo) {
     $.ajax( {
       url: "https://en.wikipedia.org/w/api.php",
@@ -129,7 +138,12 @@ class Application extends React.Component {
       url: 'https://api.spotify.com/v1/artists/' + artist.id + "/albums",
       success: saveAlbumResults
     });
-    }
+  }
+
+  // Open the about modal
+  onClickAbout() {
+    this.setState({showAboutModal: true})
+  }
 };
 
 // Our main instructions to render the application
