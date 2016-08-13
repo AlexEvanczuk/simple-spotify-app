@@ -1,23 +1,12 @@
 import { Modal } from 'react-bootstrap/lib';
 
 export default class AboutModal extends React.Component {
-  constructor() {
-    super();
-    this.state = {showModal: true};
-  }
-
-  close() {
-    this.setState({showModal: false});
-  }
-
-  open() {
-    this.setState({showModal: true});
-  }
 
   render() {
+    let { onCloseAbout } = this.props;
 
     return (
-        <Modal show={this.state.showModal} onHide={this.close.bind(this)}>
+        <Modal show={true} onHide={onCloseAbout}>
           <Modal.Header closeButton>
             <Modal.Title>Zen Spotify</Modal.Title>
           </Modal.Header>

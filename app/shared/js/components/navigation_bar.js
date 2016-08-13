@@ -2,7 +2,7 @@ import { Navbar, Nav, NavItem } from 'react-bootstrap/lib';
 
 export default class NavigationBar extends React.Component {
   render () {
-    let { onClickAbout } = this.props;
+    let { onOpenAbout } = this.props;
 
     return (<Navbar staticTop={true}>
               <Navbar.Header>
@@ -11,7 +11,7 @@ export default class NavigationBar extends React.Component {
                 </Navbar.Brand>
               </Navbar.Header>
               <Nav>
-                <NavItem onClick={onClickAbout} eventKey={1} href="#">About</NavItem>
+                <NavItem onClick={onOpenAbout} eventKey={1} href="#">About</NavItem>
               </Nav>
             </Navbar>);
   }

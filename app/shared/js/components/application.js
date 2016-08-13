@@ -23,7 +23,7 @@ class Application extends React.Component {
         albumSearchResults = this.state.albums,
         aboutModal = null;
 
-    let navBar = <NavigationBar onClickAbout={this.onClickAbout.bind(this)}/>;
+    let navBar = <NavigationBar onOpenAbout={this.onOpenAbout.bind(this)}/>;
 
     let searchContainer = <SearchContainer onSearchArtist={this.onSearchArtist.bind(this)}/>;
 
@@ -37,7 +37,7 @@ class Application extends React.Component {
                               albums={albumSearchResults}/>);
 
     if(this.state.showAboutModal) {
-      aboutModal = <AboutModal/>
+      aboutModal = <AboutModal onCloseAbout={this.onCloseAbout.bind(this)}/>
     }
 
     // Main application top level view
@@ -142,8 +142,13 @@ class Application extends React.Component {
   }
 
   // Open the about modal
-  onClickAbout() {
+  onOpenAbout() {
     this.setState({showAboutModal: true})
+  }
+
+  // Open the about modal
+  onCloseAbout() {
+    this.setState({showAboutModal: false})
   }
 };
 

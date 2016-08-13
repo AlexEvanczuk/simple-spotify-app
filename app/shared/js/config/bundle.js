@@ -106,7 +106,7 @@
 	          albumSearchResults = this.state.albums,
 	          aboutModal = null;
 
-	      var navBar = _react2.default.createElement(_navigation_bar2.default, { onClickAbout: this.onClickAbout.bind(this) });
+	      var navBar = _react2.default.createElement(_navigation_bar2.default, { onOpenAbout: this.onOpenAbout.bind(this) });
 
 	      var searchContainer = _react2.default.createElement(_search_container2.default, { onSearchArtist: this.onSearchArtist.bind(this) });
 
@@ -120,7 +120,7 @@
 	        albums: albumSearchResults });
 
 	      if (this.state.showAboutModal) {
-	        aboutModal = _react2.default.createElement(_about_modal2.default, null);
+	        aboutModal = _react2.default.createElement(_about_modal2.default, { onCloseAbout: this.onCloseAbout.bind(this) });
 	      }
 
 	      // Main application top level view
@@ -264,9 +264,17 @@
 	    // Open the about modal
 
 	  }, {
-	    key: 'onClickAbout',
-	    value: function onClickAbout() {
+	    key: 'onOpenAbout',
+	    value: function onOpenAbout() {
 	      this.setState({ showAboutModal: true });
+	    }
+
+	    // Open the about modal
+
+	  }, {
+	    key: 'onCloseAbout',
+	    value: function onCloseAbout() {
+	      this.setState({ showAboutModal: false });
 	    }
 	  }]);
 
@@ -19975,29 +19983,18 @@
 	  function AboutModal() {
 	    _classCallCheck(this, AboutModal);
 
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AboutModal).call(this));
-
-	    _this.state = { showModal: true };
-	    return _this;
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(AboutModal).apply(this, arguments));
 	  }
 
 	  _createClass(AboutModal, [{
-	    key: "close",
-	    value: function close() {
-	      this.setState({ showModal: false });
-	    }
-	  }, {
-	    key: "open",
-	    value: function open() {
-	      this.setState({ showModal: true });
-	    }
-	  }, {
 	    key: "render",
 	    value: function render() {
+	      var onCloseAbout = this.props.onCloseAbout;
+
 
 	      return React.createElement(
 	        _lib.Modal,
-	        { show: this.state.showModal, onHide: this.close.bind(this) },
+	        { show: true, onHide: onCloseAbout },
 	        React.createElement(
 	          _lib.Modal.Header,
 	          { closeButton: true },
@@ -20141,7 +20138,7 @@
 	  _createClass(NavigationBar, [{
 	    key: "render",
 	    value: function render() {
-	      var onClickAbout = this.props.onClickAbout;
+	      var onOpenAbout = this.props.onOpenAbout;
 
 
 	      return React.createElement(
@@ -20161,7 +20158,7 @@
 	          null,
 	          React.createElement(
 	            _lib.NavItem,
-	            { onClick: onClickAbout, eventKey: 1, href: "#" },
+	            { onClick: onOpenAbout, eventKey: 1, href: "#" },
 	            "About"
 	          )
 	        )
