@@ -60,17 +60,6 @@ ul {
   padding-left: 30px;
 }
 
-.thumbnail {
-  display: inline-block !important;
-  width: 200px;
-  margin-right:10px;
-}
-
-.thumbnail-caption {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}
 
 .audio-playing {
   color: green;
@@ -86,7 +75,7 @@ ul {
 }
 
 .track-listing-modal-body{
-  overflow-y: scroll;
+  overflow-y: auto;
   height: 500px;
 }
 
@@ -94,7 +83,7 @@ ul {
   width: 100%;
 }
 
-.album-thumbnail-overlay {
+.clickable-thumbnail-overlay {
   position:absolute;
   top:0;
   cursor: pointer;
@@ -108,25 +97,25 @@ ul {
   -moz-transition: opacity .25s ease;}
 
 
-.album-thumbnail {
+.clickable-thumbnail {
   position: relative;
   display: inline-block;
   margin:10px;
   border: 1px solid rgba(0,0,0,.75);
 }
 
-.album-thumbnail:hover .album-thumbnail-overlay {
+.clickable-thumbnail:hover .clickable-thumbnail-overlay {
   opacity:1;
 }
 
-.found-artist {
+.selected-artist {
   max-width: 780px;
   max-height: 350px;
-  overflow-y: scroll;
+  overflow-y: auto;
   display: inline-block;
 }
 
-.album-thumbnail-overlay-text {
+.clickable-thumbnail-overlay-text {
   font-family:Helvetica;
   font-weight:900;
   color:rgba(255,255,255,.85);

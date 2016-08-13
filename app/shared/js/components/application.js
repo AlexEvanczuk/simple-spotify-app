@@ -60,8 +60,7 @@ class Application extends React.Component {
 
   // When the user selects an artist, asynchronously load the artist information, their albums, and
   // save the selected artist
-  onSelectArtist(selectedArtist, e) {
-    e.preventDefault();
+  onSelectArtist(selectedArtist) {
     this.getArtistInfo(selectedArtist.name, this.saveArtistInfo.bind(this));
     this.searchAlbums(selectedArtist, this.saveAlbumResults.bind(this));
     this.setState({selectedArtist: selectedArtist})
@@ -125,7 +124,9 @@ class Application extends React.Component {
       success: function(response) {
         let pages = Object.keys(response.query.pages);
         if(pages.length > 0){
-          saveArtistInfo(response.query.pages[pages[0]].extract)
+          let wikipediaArticle = response.query.pages[pages[0]].extract;
+          let artistInfo = wikipediaArticle && wikipediaArticle.length > 100 ? wikipediaArticle : "No information found on Wikipedia, sorry!";
+          saveArtistInfo(artistInfo)
         }
       }
     });

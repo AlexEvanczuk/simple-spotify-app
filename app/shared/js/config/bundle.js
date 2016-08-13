@@ -60,15 +60,15 @@
 
 	var _artist_view2 = _interopRequireDefault(_artist_view);
 
-	var _album_view = __webpack_require__(259);
+	var _album_view = __webpack_require__(260);
 
 	var _album_view2 = _interopRequireDefault(_album_view);
 
-	var _about_modal = __webpack_require__(261);
+	var _about_modal = __webpack_require__(262);
 
 	var _about_modal2 = _interopRequireDefault(_about_modal);
 
-	var _navigation_bar = __webpack_require__(262);
+	var _navigation_bar = __webpack_require__(263);
 
 	var _navigation_bar2 = _interopRequireDefault(_navigation_bar);
 
@@ -157,8 +157,7 @@
 
 	  }, {
 	    key: 'onSelectArtist',
-	    value: function onSelectArtist(selectedArtist, e) {
-	      e.preventDefault();
+	    value: function onSelectArtist(selectedArtist) {
 	      this.getArtistInfo(selectedArtist.name, this.saveArtistInfo.bind(this));
 	      this.searchAlbums(selectedArtist, this.saveAlbumResults.bind(this));
 	      this.setState({ selectedArtist: selectedArtist });
@@ -243,7 +242,9 @@
 	        success: function success(response) {
 	          var pages = Object.keys(response.query.pages);
 	          if (pages.length > 0) {
-	            saveArtistInfo(response.query.pages[pages[0]].extract);
+	            var wikipediaArticle = response.query.pages[pages[0]].extract;
+	            var artistInfo = wikipediaArticle && wikipediaArticle.length > 100 ? wikipediaArticle : "No information found on Wikipedia, sorry!";
+	            saveArtistInfo(artistInfo);
 	          }
 	        }
 	      });
@@ -19333,7 +19334,7 @@
 /* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -19342,6 +19343,12 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _lib = __webpack_require__(3);
+
+	var _clickable_thumbnail = __webpack_require__(259);
+
+	var _clickable_thumbnail2 = _interopRequireDefault(_clickable_thumbnail);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -19359,7 +19366,7 @@
 	  }
 
 	  _createClass(ArtistView, [{
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
 	      var _props = this.props;
 	      var onSelectArtist = _props.onSelectArtist;
@@ -19368,34 +19375,34 @@
 	      var artistWikipediaEntry = _props.artistWikipediaEntry;
 
 	      var resultsHeader = React.createElement(
-	        "h2",
+	        'h2',
 	        null,
-	        "Artist"
+	        'Artist'
 	      );
 
 	      var resultsPage = null;
 	      // If the user has selected an artist, display the artist picture on the left,
 	      // with the associated wikipedia article on the right
 	      if (selectedArtist) {
-	        resultsPage = React.createElement(SelectedArtist, { artistWikipediaEntry: artistWikipediaEntry, artistInfo: selectedArtist });
+	        resultsPage = React.createElement(ArtistInfo, { artistWikipediaEntry: artistWikipediaEntry, artistInfo: selectedArtist });
 	        // Otherwise, show the album results from the selected artist
 	      } else if (artistSearchResults) {
 	        resultsPage = React.createElement(
-	          "div",
+	          'div',
 	          null,
 	          artistSearchResults.map(function (artist) {
-	            return React.createElement(FoundArtist, { onSelectArtist: onSelectArtist, artistInfo: artist, key: artist.id });
+	            return React.createElement(ArtistThumbnail, { onSelectArtist: onSelectArtist, artistInfo: artist, key: artist.id });
 	          })
 	        );
 	      } else {
 	        resultsPage = React.createElement(
-	          "div",
+	          'div',
 	          null,
-	          "Search an artist"
+	          'Search an artist'
 	        );
 	      }
 	      var element = React.createElement(
-	        "div",
+	        'div',
 	        null,
 	        resultsHeader,
 	        resultsPage
@@ -19410,67 +19417,59 @@
 	exports.default = ArtistView;
 	;
 
-	var SelectedArtist = function (_React$Component2) {
-	  _inherits(SelectedArtist, _React$Component2);
+	var ArtistInfo = function (_React$Component2) {
+	  _inherits(ArtistInfo, _React$Component2);
 
-	  function SelectedArtist() {
-	    _classCallCheck(this, SelectedArtist);
+	  function ArtistInfo() {
+	    _classCallCheck(this, ArtistInfo);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(SelectedArtist).apply(this, arguments));
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ArtistInfo).apply(this, arguments));
 	  }
 
-	  _createClass(SelectedArtist, [{
-	    key: "render",
+	  _createClass(ArtistInfo, [{
+	    key: 'render',
 	    value: function render() {
 	      var _props2 = this.props;
 	      var artistInfo = _props2.artistInfo;
 	      var artistWikipediaEntry = _props2.artistWikipediaEntry;
 
-	      var artistPicture = null;
-	      if (artistInfo.images.length > 2) {
-	        artistPicture = artistInfo.images[0].url;
-	      } else {
-	        artistPicture = "https://image.freepik.com/free-icon/black-simple-music-note-vector_318-10095.jpg";
-	      }
 
-	      var resultsPage = React.createElement(
-	        "div",
+	      return React.createElement(
+	        'div',
 	        null,
 	        React.createElement(
-	          "div",
-	          { className: "found-artist" },
-	          React.createElement(_lib.Thumbnail, { src: artistPicture, alt: "202x225" })
+	          'div',
+	          { className: 'selected-artist' },
+	          React.createElement(ArtistThumbnail, { artistInfo: artistInfo })
 	        ),
 	        React.createElement(
-	          "div",
-	          { className: "found-artist" },
+	          'div',
+	          { className: 'selected-artist' },
 	          React.createElement(
-	            "h2",
+	            'h2',
 	            null,
 	            artistInfo.name
 	          ),
-	          React.createElement("div", { dangerouslySetInnerHTML: { __html: artistWikipediaEntry } })
+	          React.createElement('div', { dangerouslySetInnerHTML: { __html: artistWikipediaEntry } })
 	        )
 	      );
-
-	      return resultsPage;
 	    }
 	  }]);
 
-	  return SelectedArtist;
+	  return ArtistInfo;
 	}(React.Component);
 
-	var FoundArtist = function (_React$Component3) {
-	  _inherits(FoundArtist, _React$Component3);
+	var ArtistThumbnail = function (_React$Component3) {
+	  _inherits(ArtistThumbnail, _React$Component3);
 
-	  function FoundArtist() {
-	    _classCallCheck(this, FoundArtist);
+	  function ArtistThumbnail() {
+	    _classCallCheck(this, ArtistThumbnail);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(FoundArtist).apply(this, arguments));
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ArtistThumbnail).apply(this, arguments));
 	  }
 
-	  _createClass(FoundArtist, [{
-	    key: "render",
+	  _createClass(ArtistThumbnail, [{
+	    key: 'render',
 	    value: function render() {
 	      var _props3 = this.props;
 	      var artistInfo = _props3.artistInfo;
@@ -19482,34 +19481,26 @@
 	      } else {
 	        artistPicture = "https://image.freepik.com/free-icon/black-simple-music-note-vector_318-10095.jpg";
 	      }
-	      var artistName = artistInfo.name;
-	      var selectArtistButton = React.createElement(
-	        _lib.Button,
-	        { onClick: this.handleSelect.bind(this, onSelectArtist, artistInfo),
-	          bsStyle: "primary",
-	          className: "select-artist-button" },
-	        artistName
-	      );
 
-	      return React.createElement(
-	        _lib.Thumbnail,
-	        { src: artistPicture, alt: "202x225" },
-	        selectArtistButton
-	      );
+	      var thumbnail = React.createElement(_clickable_thumbnail2.default, { imageSrc: artistPicture, overlayText: artistInfo.name, onClick: this.handleSelect.bind(this, onSelectArtist, artistInfo) });
+
+	      return thumbnail;
 	    }
 	  }, {
-	    key: "handleSelect",
-	    value: function handleSelect(onSelectArtist, artistInfo, e) {
-	      onSelectArtist(artistInfo);
+	    key: 'handleSelect',
+	    value: function handleSelect(onSelectArtist, artistInfo) {
+	      if (onSelectArtist) {
+	        onSelectArtist(artistInfo);
+	      }
 	    }
 	  }]);
 
-	  return FoundArtist;
+	  return ArtistThumbnail;
 	}(React.Component);
 
 /***/ },
 /* 259 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	"use strict";
 
@@ -19519,9 +19510,71 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _track_list = __webpack_require__(260);
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ClickableThumbnail = function (_React$Component) {
+	  _inherits(ClickableThumbnail, _React$Component);
+
+	  function ClickableThumbnail() {
+	    _classCallCheck(this, ClickableThumbnail);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(ClickableThumbnail).apply(this, arguments));
+	  }
+
+	  _createClass(ClickableThumbnail, [{
+	    key: "render",
+	    value: function render() {
+	      var _props = this.props;
+	      var onClick = _props.onClick;
+	      var overlayText = _props.overlayText;
+	      var imageSrc = _props.imageSrc;
+
+
+	      return React.createElement(
+	        "div",
+	        { onClick: onClick, className: "clickable-thumbnail" },
+	        React.createElement("img", { src: imageSrc, height: "200", width: "200" }),
+	        React.createElement(
+	          "div",
+	          { className: "clickable-thumbnail-overlay" },
+	          React.createElement(
+	            "span",
+	            { className: "clickable-thumbnail-overlay-text" },
+	            overlayText
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return ClickableThumbnail;
+	}(React.Component);
+
+	exports.default = ClickableThumbnail;
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _track_list = __webpack_require__(261);
 
 	var _track_list2 = _interopRequireDefault(_track_list);
+
+	var _clickable_thumbnail = __webpack_require__(259);
+
+	var _clickable_thumbnail2 = _interopRequireDefault(_clickable_thumbnail);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19541,7 +19594,7 @@
 	  }
 
 	  _createClass(AlbumView, [{
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
 	      var _props = this.props;
 	      var albums = _props.albums;
@@ -19549,16 +19602,16 @@
 	      var onStopAudio = _props.onStopAudio;
 
 	      var resultsHeader = React.createElement(
-	        "h2",
+	        'h2',
 	        null,
-	        "Albums"
+	        'Albums'
 	      );
 
 	      var resultsPage = null;
 
 	      if (albums) {
 	        resultsPage = React.createElement(
-	          "span",
+	          'span',
 	          null,
 	          albums.map(function (album) {
 	            return React.createElement(Album, { onPlayAudio: onPlayAudio, onStopAudio: onStopAudio, albumInfo: album, key: album.id });
@@ -19566,13 +19619,13 @@
 	        );
 	      } else {
 	        resultsPage = React.createElement(
-	          "div",
+	          'div',
 	          null,
-	          "Select an artist"
+	          'Select an artist'
 	        );
 	      }
 	      return React.createElement(
-	        "span",
+	        'span',
 	        null,
 	        resultsHeader,
 	        resultsPage
@@ -19599,7 +19652,7 @@
 	  }
 
 	  _createClass(Album, [{
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
 	      var _props2 = this.props;
 	      var albumInfo = _props2.albumInfo;
@@ -19612,29 +19665,22 @@
 	      if (this.state.showTrackList) {
 	        trackList = React.createElement(_track_list2.default, { onCloseTrackList: this.closeTrackList.bind(this), onPlayAudio: onPlayAudio, onStopAudio: onStopAudio, albumInfo: albumInfo });
 	      }
+
+	      var thumbnail = React.createElement(_clickable_thumbnail2.default, { imageSrc: albumCover, overlayText: albumName, onClick: this.openTrackList.bind(this) });
 	      return React.createElement(
-	        "div",
-	        { onClick: this.openTrackList.bind(this), className: "album-thumbnail" },
-	        React.createElement("img", { src: albumCover, height: "200", width: "200" }),
-	        React.createElement(
-	          "div",
-	          { className: "album-thumbnail-overlay" },
-	          trackList,
-	          React.createElement(
-	            "span",
-	            { className: "album-thumbnail-overlay-text" },
-	            albumName
-	          )
-	        )
+	        'span',
+	        null,
+	        trackList,
+	        thumbnail
 	      );
 	    }
 	  }, {
-	    key: "openTrackList",
+	    key: 'openTrackList',
 	    value: function openTrackList() {
 	      this.setState({ showTrackList: true });
 	    }
 	  }, {
-	    key: "closeTrackList",
+	    key: 'closeTrackList',
 	    value: function closeTrackList() {
 	      this.setState({ showTrackList: false });
 	    }
@@ -19644,7 +19690,7 @@
 	}(React.Component);
 
 /***/ },
-/* 260 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -19904,7 +19950,7 @@
 	}(React.Component);
 
 /***/ },
-/* 261 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -20064,7 +20110,7 @@
 	exports.default = AboutModal;
 
 /***/ },
-/* 262 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";

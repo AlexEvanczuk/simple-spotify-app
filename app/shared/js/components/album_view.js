@@ -1,4 +1,5 @@
 import TrackList from './track_list';
+import ClickableThumbnail from './clickable_thumbnail';
 
 export default class AlbumView extends React.Component {
 
@@ -37,13 +38,9 @@ class Album extends React.Component {
     if(this.state.showTrackList) {
       trackList = <TrackList onCloseTrackList={this.closeTrackList.bind(this)} onPlayAudio={onPlayAudio} onStopAudio={onStopAudio} albumInfo={albumInfo} />
     }
-    return (<div onClick={this.openTrackList.bind(this)} className="album-thumbnail">
-                <img src={albumCover} height="200" width="200"/>
-                <div className="album-thumbnail-overlay">
-                    {trackList}
-                    <span className="album-thumbnail-overlay-text">{albumName}</span>
-                </div>
-              </div>);
+
+    let thumbnail = <ClickableThumbnail imageSrc={albumCover} overlayText={albumName} onClick={this.openTrackList.bind(this)}/>
+    return (<span>{trackList}{thumbnail}</span>);
   }
 
   openTrackList(){
