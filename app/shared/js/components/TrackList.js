@@ -1,4 +1,5 @@
-import { Button, Modal, Tooltip, OverlayTrigger, Glyphicon} from 'react-bootstrap/lib';
+import React from 'react';
+import { Modal, Tooltip, OverlayTrigger, Glyphicon} from 'react-bootstrap/lib';
 
 export default class TrackList extends React.Component {
   constructor() {

@@ -1,4 +1,5 @@
-import { FormGroup, FormControl, InputGroup, Glyphicon} from 'react-bootstrap/lib';
+import React from 'react';
+import { FormGroup, FormControl, InputGroup, Glyphicon } from 'react-bootstrap/lib';
 
 export default class SearchContainer extends React.Component {
   render() {
@@ -19,6 +20,6 @@ export default class SearchContainer extends React.Component {
   }
 
   handleChange(onSearchArtist, e) {
-    onSearchArtist(e.target.value)
+    onSearchArtist(e.target.value);
   }
 }

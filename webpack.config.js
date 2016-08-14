@@ -1,7 +1,7 @@
 module.exports = {
-  entry: '../components/application.js',
+  entry: './app/shared/js/components/Application.js',
   output: {
-    path: __dirname,
+    path: './app/shared/js/',
     filename: 'bundle.js'
   },
   resolve: {

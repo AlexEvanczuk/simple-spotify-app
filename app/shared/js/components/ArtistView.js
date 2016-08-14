@@ -1,5 +1,5 @@
-import { Button, Thumbnail } from 'react-bootstrap/lib';
-import ClickableThumbnail from './clickable_thumbnail';
+import React from 'react';
+import ClickableThumbnail from './ClickableThumbnail';
 
 export default class ArtistView extends React.Component {
 
@@ -20,48 +20,48 @@ export default class ArtistView extends React.Component {
         })}
       </div>);
     } else {
-      resultsPage = <div>Search an artist</div>
+      resultsPage = <div>Search an artist</div>;
     }
-    let element = (<div>{resultsHeader}{resultsPage}</div>);
-    return element
-  }
 
-};
-
-class ArtistInfo extends React.Component {
-  render () {
-    let { artistInfo, artistWikipediaEntry } = this.props;
-
-    return (<div>
-      <div className="selected-artist"><ArtistThumbnail artistInfo={artistInfo}/></div>
-      <div className="selected-artist">
-        <h2>{artistInfo.name}</h2>
-        <div dangerouslySetInnerHTML={{__html: artistWikipediaEntry}}></div>
-      </div>
-    </div>);
-
+    return (<div>{resultsHeader}{resultsPage}</div>);
   }
 
 }
 
+class ArtistInfo extends React.Component {
+  render() {
+    let { artistInfo, artistWikipediaEntry } = this.props;
+
+    return (<div>
+      <div className="selected-artist"><ArtistThumbnail artistInfo={artistInfo} /></div>
+      <div className="selected-artist">
+        <h2>{artistInfo.name}</h2>
+        <div dangerouslySetInnerHTML={{__html: artistWikipediaEntry}} />
+      </div>
+    </div>);
+  }
+}
+
 class ArtistThumbnail extends React.Component {
-  render () {
+  render() {
     let { artistInfo, onSelectArtist} = this.props;
     let artistPicture = null;
-    if(artistInfo.images.length > 2) {
+    if (artistInfo.images.length > 2) {
       artistPicture = artistInfo.images[0].url;
     } else {
-      artistPicture = "https://image.freepik.com/free-icon/black-simple-music-note-vector_318-10095.jpg"
+      artistPicture = "https://image.freepik.com/free-icon/black-simple-music-note-vector_318-10095.jpg";
     }
 
-    let thumbnail = <ClickableThumbnail imageSrc={artistPicture} overlayText={artistInfo.name} onClick={this.handleSelect.bind(this, onSelectArtist, artistInfo)}/>
+    return (<ClickableThumbnail
+              imageSrc={artistPicture}
+              overlayText={artistInfo.name}
+              onClick={this.handleSelect.bind(this, onSelectArtist, artistInfo)}/>);
 
-    return thumbnail;
   }
 
   handleSelect(onSelectArtist, artistInfo) {
-    if(onSelectArtist) {
-      onSelectArtist(artistInfo)
+    if (onSelectArtist) {
+      onSelectArtist(artistInfo);
     }
   }
 

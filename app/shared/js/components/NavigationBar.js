@@ -1,10 +1,11 @@
+import React from 'react';
 import { Navbar, Nav, NavItem } from 'react-bootstrap/lib';
 
 export default class NavigationBar extends React.Component {
-  render () {
+  render() {
     let { onOpenAbout } = this.props;
 
-    return (<Navbar staticTop={true}>
+    return (<Navbar staticTop>
               <Navbar.Header>
                 <Navbar.Brand>
                   <img src="./assets/images/logo-large.png"/>

@@ -7,7 +7,7 @@ Created by Alex Evanczuk.
 ## Features
 * **Artist Search:** Begin typing into the search bar to find matching artists
 * **Album Search:** Select an artist to see their albums.
-* **Track Preview:** Select an album to get its track listings and he ability to preview tracks.
+* **Track Preview:** Select an album to get its track listings and the ability to preview tracks.
 
 ## Technology/Frameworks Used
 * **React.js**: For the main application architecture
