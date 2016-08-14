@@ -1,13 +1,14 @@
 module.exports = {
-  entry: './app/shared/js/components/Application.js',
+  entry: './src/components/Application.js',
   output: {
-    path: './app/shared/js/',
+    path: './dist/',
     filename: 'bundle.js'
   },
   resolve: {
     extensions: ['', '.js', '.jsx']
   },
   debug : false,
+  devtool: 'inline-source-map',
   module: {
     loaders: [{
       test: /\.jsx?$/,
@@ -18,8 +19,4 @@ module.exports = {
       }
     }]
   },
-  externals: {
-    'react': 'React',
-    'react-dom': 'ReactDOM'
-  }
 }
