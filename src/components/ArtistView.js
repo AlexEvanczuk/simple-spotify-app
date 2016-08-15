@@ -1,69 +1,88 @@
 import React from 'react';
-import ClickableThumbnail from './ClickableThumbnail';
+import ArtistThumbnail from './ArtistThumbnail';
+import TrackTable from './TrackTable';
 
-export default class ArtistView extends React.Component {
-
-  render() {
-    let { onSelectArtist, selectedArtist, artistSearchResults, artistWikipediaEntry } = this.props;
-    let resultsHeader = (<h2>Artist</h2>);
-
-    let resultsPage = null;
-    // If the user has selected an artist, display the artist picture on the left,
-    // with the associated wikipedia article on the right
-    if(selectedArtist) {
-      resultsPage = <ArtistInfo artistWikipediaEntry={artistWikipediaEntry} artistInfo={selectedArtist}/>;
-    // Otherwise, show the album results from the selected artist
-    } else if(artistSearchResults) {
-      resultsPage = (<div>
-        {artistSearchResults.map(function(artist) {
-          return <ArtistThumbnail onSelectArtist={onSelectArtist} artistInfo={artist} key={artist.id} />;
-        })}
-      </div>);
-    } else {
-      resultsPage = <div>Search an artist</div>;
-    }
-
-    return (<div>{resultsHeader}{resultsPage}</div>);
-  }
-
-}
-
-class ArtistInfo extends React.Component {
-  render() {
-    let { artistInfo, artistWikipediaEntry } = this.props;
-
-    return (<div>
-      <div className="selected-artist"><ArtistThumbnail artistInfo={artistInfo} /></div>
-      <div className="selected-artist">
-        <h2>{artistInfo.name}</h2>
-        <div dangerouslySetInnerHTML={{__html: artistWikipediaEntry}} />
+// Artist view has three possible states
+// 1. The user has selected an artist, in which case display the artist and their top tracks
+// 2. The user is searching an artist, in which case display the matching results
+// 3. The user has not searched for an artist, in which case prompt them to search
+const ArtistView = ({ onSelectArtist,
+  selectedArtist = null,
+  artistSearchResults = null,
+  selectedArtistTopTracks,
+  currentlyPlayingTrack,
+  onPlayAudio,
+  onStopAudio
+}) => (
+  <div>
+    {selectedArtist ?
+      <ArtistTopTracks
+        artistInfo={selectedArtist}
+        selectedArtistTopTracks={selectedArtistTopTracks}
+        onPlayAudio={onPlayAudio}
+        currentlyPlayingTrack={currentlyPlayingTrack}
+        onStopAudio={onStopAudio}
+      />
+    : artistSearchResults ?
+      <div>
+        <h2>Artist</h2>
+        {artistSearchResults.map((artist) => (
+          <ArtistThumbnail
+            onSelectArtist={onSelectArtist}
+            artistInfo={artist}
+            key={artist.id}
+          />
+        ))}
       </div>
-    </div>);
-  }
-}
-
-class ArtistThumbnail extends React.Component {
-  render() {
-    let { artistInfo, onSelectArtist} = this.props;
-    let artistPicture = null;
-    if (artistInfo.images.length > 2) {
-      artistPicture = artistInfo.images[0].url;
-    } else {
-      artistPicture = "https://image.freepik.com/free-icon/black-simple-music-note-vector_318-10095.jpg";
+      : <div>
+        <h2>Artist</h2>
+        Search an artist
+      </div>
     }
+  </div>
+);
 
-    return (<ClickableThumbnail
-              imageSrc={artistPicture}
-              overlayText={artistInfo.name}
-              onClick={this.handleSelect.bind(this, onSelectArtist, artistInfo)}/>);
+ArtistView.propTypes = {
+  onSelectArtist: React.PropTypes.func.isRequired,
+  selectedArtist: React.PropTypes.object,
+  artistSearchResults: React.PropTypes.array,
+  selectedArtistTopTracks: React.PropTypes.array,
+  onPlayAudio: React.PropTypes.func.isRequired,
+  onStopAudio: React.PropTypes.func.isRequired,
+  currentlyPlayingTrack: React.PropTypes.object,
+};
 
-  }
+export default ArtistView;
 
-  handleSelect(onSelectArtist, artistInfo) {
-    if (onSelectArtist) {
-      onSelectArtist(artistInfo);
-    }
-  }
+const ArtistTopTracks = ({ artistInfo,
+  selectedArtistTopTracks,
+  onPlayAudio,
+  onStopAudio,
+  currentlyPlayingTrack
+}) => (
+  <div>
+    <h2>{artistInfo.name}</h2>
+    <div className="artist-container">
+      <div className="selected-artist">
+        <ArtistThumbnail artistInfo={artistInfo} />
+      </div>
+      <div className="top-tracks-table">
+        <h3>Top Tracks</h3>
+        {<TrackTable
+          trackList={selectedArtistTopTracks}
+          onPlayAudio={onPlayAudio}
+          onStopAudio={onStopAudio}
+          currentlyPlayingTrack={currentlyPlayingTrack}
+        />}
+      </div>
+    </div>
+  </div>
+);
 
-
-}
+ArtistTopTracks.propTypes = {
+  artistInfo: React.PropTypes.object,
+  selectedArtistTopTracks: React.PropTypes.array,
+  onPlayAudio: React.PropTypes.func.isRequired,
+  onStopAudio: React.PropTypes.func.isRequired,
+  currentlyPlayingTrack: React.PropTypes.object,
+};

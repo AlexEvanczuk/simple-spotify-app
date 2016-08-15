@@ -3,5 +3,11 @@
   "rules": {
     "comma-dangle": 0,
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "no-nested-ternary": "off"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
   }
 }

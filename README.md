@@ -16,7 +16,7 @@ Created by Alex Evanczuk.
 * **Wikipedia API**: For getting artist biographical information
 * **Spotify API**: For getting artist musical information
 
-
 ## Future Developments
 * Host on AWS or Heroku, allow logging in to show playlists and play full tracks
 * Clean up CSS
+* Top-level audio player

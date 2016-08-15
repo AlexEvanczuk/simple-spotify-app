@@ -86,7 +86,6 @@ ul {
 .clickable-thumbnail-overlay {
   position:absolute;
   top:0;
-  cursor: pointer;
   background:rgba(0,0,0,.75);
   text-align:left;
   height:200px;
@@ -94,10 +93,18 @@ ul {
   padding:10px;
   opacity:0;
   -webkit-transition: opacity .25s ease;
-  -moz-transition: opacity .25s ease;}
-
+  -moz-transition: opacity .25s ease;
+}
 
 .clickable-thumbnail {
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  margin:10px;
+  border: 1px solid rgba(0,0,0,.75);
+}
+
+.non-clickable-thumbnail {
   position: relative;
   display: inline-block;
   margin:10px;
@@ -108,11 +115,21 @@ ul {
   opacity:1;
 }
 
+.artist-container {
+  display: flex;
+}
+
 .selected-artist {
   max-width: 780px;
   max-height: 350px;
   overflow-y: auto;
   display: inline-block;
+  padding-top: 15px;
+}
+
+.top-tracks-table {
+  flex-grow: 1;
+  padding-left: 20px;
 }
 
 .clickable-thumbnail-overlay-text {
@@ -120,4 +137,12 @@ ul {
   font-weight:900;
   color:rgba(255,255,255,.85);
   font-size:24px;
+}
+
+.artist-picture-parent-block {
+  position: absolute;
+}
+
+.artist-picture-child-block {
+
 }

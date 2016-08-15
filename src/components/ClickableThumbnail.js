@@ -1,15 +1,19 @@
 import React from 'react';
 
-export default class ClickableThumbnail extends React.Component {
+const ClickableThumbnail = ({ onClick = null, overlayText, imageSrc }) => (
+  // TODO: Use classnames to specify cursor behavior
+  <div onClick={onClick} className={onClick ? 'clickable-thumbnail' : 'non-clickable-thumbnail'}>
+    <img alt="None found" src={imageSrc} height="200" width="200" />
+    <div className="clickable-thumbnail-overlay">
+      <span className="clickable-thumbnail-overlay-text">{overlayText}</span>
+    </div>
+  </div>
+);
 
-  render () {
-    let { onClick, overlayText, imageSrc } = this.props;
+ClickableThumbnail.propTypes = {
+  onClick: React.PropTypes.func,
+  overlayText: React.PropTypes.string.isRequired,
+  imageSrc: React.PropTypes.string.isRequired
+};
 
-    return (<div onClick={onClick} className="clickable-thumbnail">
-                <img src={imageSrc} height="200" width="200"/>
-                <div className="clickable-thumbnail-overlay">
-                  <span className="clickable-thumbnail-overlay-text">{overlayText}</span>
-                </div>
-              </div>);
-  }
-}
+export default ClickableThumbnail;
